@@ -1,0 +1,9 @@
+server:
+  port: 8002
+  servlet:
+    context-path: /api
+luoapi:
+  client:
+    access-key: ranxu
+    secret-key: abc
+
