@@ -2,8 +2,14 @@ server:
   port: 8002
   servlet:
     context-path: /api
+spring:
+  profiles:
+    active: dev
+  mvc:
+    path match:
+      matching-strategy: ant_path_matcher
 luoapi:
   client:
-    access-key: ranxu
-    secret-key: abc
+    access-key: cfccfe5100ee53776a7ba13dfaef9ef2
+    secret-key: 6a65d0aa978c54aeb262d50f0711acfc
 
