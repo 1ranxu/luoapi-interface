@@ -2,8 +2,10 @@ package com.luoying.controller;
 
 import cn.hutool.json.JSONUtil;
 import com.luoying.model.params.*;
-import com.luoying.model.response.NameResponse;
-import com.luoying.model.response.RandomWallpaperResponse;
+import com.luoying.response.AcquireWebsiteTitleResponse;
+import com.luoying.response.DayPictureResponse;
+import com.luoying.response.JokeResponse;
+import com.luoying.response.RandomWallpaperResponse;
 import com.luoying.utils.RequestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,8 +26,8 @@ public class ApiController {
      * 获取名字
      */
     @GetMapping("/name")
-    public NameResponse getName(NameParams nameParams) {
-        return JSONUtil.toBean(JSONUtil.toJsonStr(nameParams), NameResponse.class);
+    public String getName(NameParams nameParams) {
+        return JSONUtil.toJsonStr(nameParams);
     }
 
     /**
@@ -82,4 +84,84 @@ public class ApiController {
     public String getWeatherInfo(WeatherParams weatherParams) {
         return getResponse("https://api.vvhan.com/api/weather", weatherParams);
     }
+
+    /**
+     * 随机头像
+     */
+    @GetMapping("/randomAvatar")
+    public String randomAvatar(RandomAvatarParams randomAvatarParams) {
+        String baseUrl = "https://api.vvhan.com/api/avatar";
+        if (StringUtils.isAllBlank(randomAvatarParams.getSort())) {
+            baseUrl = baseUrl + "?type=json";
+        } else {
+            baseUrl = baseUrl + "?type=json&class=" + randomAvatarParams.getSort();
+        }
+        return getResponse(baseUrl, null);
+    }
+
+
+    /**
+     * 随机高清风景图片
+     */
+    @GetMapping("/randomScenery")
+    public String randomScenery() {
+        return getResponse("https://api.vvhan.com/api/view?type=json", null);
+    }
+
+    /**
+     * 随机高清二次元图片
+     */
+    @GetMapping("/random2D")
+    public String random2D() {
+        return getResponse("https://api.vvhan.com/api/acgimg?type=json", null);
+    }
+
+    /**
+     * 每日图片
+     */
+    @GetMapping("/dayPicture")
+    public DayPictureResponse dayPicture(DayPictureParams dayPictureParams) {
+        String baseUrl = "https://api.vvhan.com/api/bing";
+        String url = buildUrl(baseUrl, dayPictureParams);
+        if (StringUtils.isAllBlank(dayPictureParams.getRand(), dayPictureParams.getSize())) {
+            url = url + "?type=json";
+        } else {
+            url = url + "&type=json";
+        }
+        return JSONUtil.toBean(getResponse(url, null), DayPictureResponse.class);
+    }
+
+
+    /**
+     * 随机笑话
+     */
+    @GetMapping("/joke")
+    public JokeResponse joke() {
+        return JSONUtil.toBean(RequestUtils.get("https://api.vvhan.com/api/joke?type=json"), JokeResponse.class);
+    }
+
+    /**
+     * 垃圾分类
+     */
+    @GetMapping("/wasteSorting")
+    public String wasteSorting(WasteSortingParams wasteSortingParams) {
+        return getResponse("https://api.vvhan.com/api/la.ji", wasteSortingParams);
+    }
+
+    /**
+     * 获取网站标题
+     */
+    @GetMapping("/acquireWebsiteTitle")
+    public AcquireWebsiteTitleResponse AcquireWebsiteTitle(AcquireWebsiteTitleParams acquireWebsiteTitleParams) {
+        return JSONUtil.toBean(getResponse("https://api.vvhan.com/api/title", acquireWebsiteTitleParams), AcquireWebsiteTitleResponse.class);
+    }
+
+    /**
+     * 每日励志英语
+     */
+    @GetMapping("/inspiringEnglish")
+    public String inspiringEnglish(InspiringEnglishParams inspiringEnglishParams) {
+        return getResponse("https://api.vvhan.com/api/en", inspiringEnglishParams);
+    }
+
 }

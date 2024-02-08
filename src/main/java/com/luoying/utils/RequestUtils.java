@@ -14,6 +14,9 @@ public class RequestUtils {
      * 生成url
      */
     public static <T> String buildUrl(String baseUrl, T params) {
+        if(params == null){
+            return baseUrl;
+        }
         StringBuilder url = new StringBuilder(baseUrl);
         // 使用反射获取类的变量
         Field[] fields = params.getClass().getDeclaredFields();
